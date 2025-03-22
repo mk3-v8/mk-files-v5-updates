@@ -1,12 +1,450 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to mk-files-v5</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحديثات سكربت FiveM</title>
+    <!-- Add Prism CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --primary-color: #0a0a0a;
+            --secondary-color: #141414;
+            --accent-color: #5271ff;
+            --warning-color: #ffa07a;
+            --success-color: #66bb6a;
+            --text-color: #ffffff;
+            --light-text: #a0a0a0;
+            --border-color: #2a2a2a;
+            --card-bg: #1a1a1a;
+            --hover-color: #202020;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--primary-color);
+            text-align: right;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            padding: 2rem 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(82, 113, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(82, 113, 255, 0.08) 0%, transparent 50%);
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: right;
+            justify-content: right;
+            gap: 3rem;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .avatar-container {
+            position: relative;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            animation: avatarPulse 3s infinite;
+            transition: transform 0.3s ease;
+        }
+
+        .avatar:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes avatarPulse {
+            0% {
+                box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+                border-color: var(--accent-color);
+            }
+            50% {
+                box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+                border-color: #ffffff;
+            }
+            100% {
+                box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+                border-color: var(--accent-color);
+            }
+        }
+
+        .avatar-container::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .header-text {
+            flex: 1;
+            text-align: right;
+            max-width: 600px;
+        }
+
+
+
+        .subtitle {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--light-text);
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .last-updated {
+            position: absolute;
+            top: 50%;
+            right: 50%;
+            transform: translate(50%, -50%);
+            display: inline-block;
+            margin-top: 0.75rem;
+            font-size: 0.95rem;
+            color: var(--accent-color);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            background: rgba(82, 113, 255, 0.1);
+            border-radius: 20px;
+            border: 1px solid rgba(82, 113, 255, 0.2);
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .update-list {
+            margin: 2rem 0;
+        }
+        
+        .update-version {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .update-version:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+        
+        .version-header {
+            background: linear-gradient(45deg, var(--card-bg), var(--hover-color));
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .version-header:hover {
+            background: var(--hover-color);
+        }
+        
+        .version-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .version-title svg {
+            color: var(--accent-color);
+        }
+        
+        .version-date {
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        .version-content {
+            padding: 1.5rem;
+            background: linear-gradient(180deg, var(--card-bg), var(--secondary-color));
+        }
+        
+        .update-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .update-list ul {
+            list-style-type: none;
+            padding-right: 1.5rem;
+        }
+        
+        .update-list ul li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-right: 1.5rem;
+            color: var(--light-text);
+        }
+        
+        .update-list ul li:before {
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 10px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+        
+        .code-block {
+            background-color: #1f2430;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            border-right: 3px solid var(--accent-color);
+            direction: ltr;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .copy-button {
+            font-family: 'Tajawal', sans-serif;
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 4px;
+            color: var(--text-color);
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .copy-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .copy-button.copied {
+            background-color: var(--accent-color);
+        }
+        
+        .config-changes {
+            background-color: rgba(82, 113, 255, 0.1);
+            border: 1px solid rgba(82, 113, 255, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .config-changes h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .installation {
+            margin: 2rem 0;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .installation h2 {
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+        
+        .support {
+            background: linear-gradient(to bottom, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .discord-button {
+            display: inline-flex;
+            align-items: center;
+            background-color: #5865F2;
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3);
+        }
+        
+        .discord-button:hover {
+            background-color: #4752c4;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(88, 101, 242, 0.4);
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            color: var(--light-text);
+            padding: 1.5rem 0;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        footer a:hover {
+            color: #6b86ff;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 2rem 0;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .header-text {
+                text-align: center;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .avatar {
+                width: 120px;
+                height: 120px;
+            }
+
+            .avatar-container::after {
+                width: 140px;
+                height: 140px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>Hello, world! 👋</h1>
-  <p>This is your GitHub Pages site deployed from <strong>mk-files-v5.github.io</strong>.</p>
+    <header>
+        <div class="header-content">
+            <div class="avatar-container">
+                <img src="mk-avatar.gif" alt="MK Team Logo" class="avatar">
+            </div>
+            <div class="header-text">
+                <h2>تحديثات MK Files V5</h2>
+                <div class="subtitle">تابع أحدث التغييرات، والميزات الجديدة</div>
+                <div class="last-updated">آخر تحديث: 22 مارس 2025</div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <section class="update-list">
+            <!-- Updates will be dynamically inserted here -->
+        </section>
+        
+        <section class="installation">
+            <h2>تعليمات التحديثات</h2>
+            <strong>تحديثات تلقائية</strong> - جميع تحديثاتنا يتم تنزيلها على خادمك بشكل تلقائي، يرجى التاكد من تحديث الكونفق فقط.
+        </section>
+    </div>
+    
+    <section class="support">
+        <div class="container">
+            <h2>هل تحتاج إلى مساعدة؟</h2>
+            <p>إذا كنت تواجه مشاكل في التحديث أو لديك أسئلة، حياك الدسكورد.</p>
+            <br>
+            <a href="https://discord.gg/am" class="discord-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.249.594.05.05 0 0 0-.03.03.052.052 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z"/>
+                </svg>
+                MK Team Discord
+            </a>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <p dir="ltr">© 2025 MK Team جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+    
+    <!-- Add Prism JS at the end of body for better performance -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <!-- Add our JavaScript files -->
+    <script src="updates-data.js"></script>
+    <script src="updates.js"></script>
 </body>
 </html>
