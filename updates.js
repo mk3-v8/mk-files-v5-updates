@@ -1,11 +1,11 @@
-// Get the updates array from the global scope
+
 const updates = window.updates || [];
 
 function createUpdateElement(update, isLatest = false) {
     const updateElement = document.createElement('div');
     updateElement.className = `update-version ${isLatest ? 'active' : ''}`;
     
-    // Create version header
+
     const header = document.createElement('div');
     header.className = 'version-header';
     
@@ -13,14 +13,14 @@ function createUpdateElement(update, isLatest = false) {
     title.className = 'version-title';
     title.innerHTML = `
         <i class="fa-solid fa-gear fa-icon"></i>
-        الإصدار ${update.version}
+        تحديث ${update.version}
     `;
     
     const date = document.createElement('div');
     date.className = 'version-date';
     date.textContent = update.date;
     
-    // Add collapse/expand icon
+
     const toggleIcon = document.createElement('i');
     toggleIcon.className = `fa-solid ${isLatest ? 'fa-chevron-up' : 'fa-chevron-down'} fa-icon toggle-icon`;
     
@@ -28,29 +28,29 @@ function createUpdateElement(update, isLatest = false) {
     header.appendChild(date);
     header.appendChild(toggleIcon);
     
-    // Create version content
+
     const content = document.createElement('div');
     content.className = 'version-content';
     
-    // Add features section if exists
+
     if (update.features) {
         const featuresSection = createSection('الميزات الجديدة', update.features);
         content.appendChild(featuresSection);
     }
     
-    // Add fixes section if exists
+
     if (update.fixes) {
         const fixesSection = createSection('إصلاحات الأخطاء', update.fixes);
         content.appendChild(fixesSection);
     }
     
-    // Add config changes section if exists
+
     if (update.configChanges) {
         const configSection = createConfigSection(update.configChanges);
         content.appendChild(configSection);
     }
     
-    // Add changes section if exists (for older versions)
+
     if (update.changes) {
         const changesSection = createSection('التغييرات', update.changes);
         content.appendChild(changesSection);
@@ -69,8 +69,8 @@ function createSection(title, items) {
     const sectionTitle = document.createElement('div');
     sectionTitle.className = 'section-title';
     
-    // Update icons based on section title
-    let icon = 'fa-list'; // default icon
+
+    let icon = 'fa-list'; 
     if (title === 'الميزات الجديدة') {
         icon = 'fa-circle-plus';
     } else if (title === 'إصلاحات الأخطاء') {
@@ -115,7 +115,7 @@ function createConfigSection(config) {
     description.textContent = config.description;
     configChanges.appendChild(description);
 
-    // Handle multiple files
+
     if (config.files && Array.isArray(config.files)) {
         config.files.forEach(file => {
             const fileSection = document.createElement('div');
@@ -161,27 +161,27 @@ function renderUpdates() {
     const updateList = document.querySelector('.update-list');
     if (!updateList) return;
     
-    // Clear existing content
+
     updateList.innerHTML = '';
     
-    // Render updates
+
     updates.forEach((update, index) => {
         const updateElement = createUpdateElement(update, index === 0);
         updateList.appendChild(updateElement);
     });
     
-    // Update last updated date
+
     const lastUpdated = document.querySelector('.last-updated');
     if (lastUpdated) {
         lastUpdated.textContent = `آخر تحديث: ${updates[0].date}`;
     }
 }
 
-// Initialize when DOM is loaded
+
 document.addEventListener('DOMContentLoaded', function() {
     renderUpdates();
     
-    // Add toggle functionality
+
     const versionHeaders = document.querySelectorAll('.version-header');
     versionHeaders.forEach(header => {
         header.addEventListener('click', function() {
@@ -190,7 +190,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             parent.classList.toggle('active');
             
-            // Update toggle icon
             if (parent.classList.contains('active')) {
                 toggleIcon.classList.remove('fa-chevron-down');
                 toggleIcon.classList.add('fa-chevron-up');
@@ -201,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Update copy button functionality
+    
     const copyButtons = document.querySelectorAll('.copy-button');
     copyButtons.forEach(button => {
         button.addEventListener('click', function(e) {
@@ -225,6 +224,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Highlight all code blocks
-    Prism.highlightAll();
+    Prism.highlightAll(); 
 }); 
