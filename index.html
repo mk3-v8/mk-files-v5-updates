@@ -275,6 +275,50 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
         
+        .code-block pre[data-line] {
+            position: relative;
+        }
+        
+        .code-block pre[data-line] .line-highlight {
+            border-radius: 10px;
+            background: rgba(76, 175, 80, 0.1);
+            position: absolute;
+            right: 0;
+            left: 0;
+            margin-top: 16px;
+            pointer-events: none;
+        }
+        
+        .code-block pre[data-line] .line-highlight:before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #4CAF50;
+        }
+        
+        .code-block .new-code {
+            border-left: 3px solid #ff4444;
+            padding-left: 1rem;
+            margin-left: -1rem;
+            background: rgba(255, 68, 68, 0.1);
+        }
+        
+        .code-block .new-code::before {
+            content: 'New';
+            position: absolute;
+            right: 1rem;
+            top: 0.5rem;
+            background: #ff4444;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
         .copy-button {
             font-family: 'Tajawal', sans-serif;
             position: absolute;
@@ -291,6 +335,7 @@
             display: flex;
             align-items: center;
             gap: 0.25rem;
+            z-index: 1000;
         }
         
         .copy-button:hover {
@@ -527,6 +572,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-lua.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-highlight/prism-line-highlight.min.js"></script>
     <script src="updates-data.js"></script>
     <script src="updates.js"></script>
 </body>

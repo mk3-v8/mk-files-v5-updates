@@ -1,4 +1,3 @@
-
 const updates = window.updates || [];
 
 function createUpdateElement(update, isLatest = false) {
@@ -108,13 +107,12 @@ function createConfigSection(config) {
         ${config.title}
     `;
 
-    const configChanges = document.createElement('div');
-    configChanges.className = 'config-changes';
-    
     const description = document.createElement('p');
+    description.className = 'config-changes';
     description.textContent = config.description;
-    configChanges.appendChild(description);
 
+    section.appendChild(title);
+    section.appendChild(description);
 
     if (config.files && Array.isArray(config.files)) {
         config.files.forEach(file => {
@@ -140,20 +138,38 @@ function createConfigSection(config) {
             const pre = document.createElement('pre');
             const code = document.createElement('code');
             code.className = 'language-lua';
-            code.textContent = file.code;
-            pre.appendChild(code);
+            
+            // If there's new code, replace the placeholder with the new code
+            if (file.newCode) {
+                const oldCode = file.code;
+                const newCode = file.newCode;
+                
+                // Replace the placeholder with the new code
+                const fullCode = oldCode.replace('--[[NEW_CODE]]', newCode);
+                code.textContent = fullCode;
+                
+                // Find the line number where the placeholder was
+                const oldLines = oldCode.split('\n');
+                const placeholderLine = oldLines.findIndex(line => line.includes('--[[NEW_CODE]]')) + 1;
+                const newCodeLines = newCode.split('\n').length;
+                
+                // Add line-highlight attribute to the pre element
+                pre.setAttribute('data-line', `${placeholderLine}-${placeholderLine + newCodeLines - 1}`);
+                pre.setAttribute('data-line-offset', '0');
+            } else {
+                code.textContent = file.code;
+            }
 
+            pre.appendChild(code);
             codeBlock.appendChild(copyButton);
             codeBlock.appendChild(pre);
 
             fileSection.appendChild(filePath);
             fileSection.appendChild(codeBlock);
-            configChanges.appendChild(fileSection);
+            section.appendChild(fileSection);
         });
     }
 
-    section.appendChild(title);
-    section.appendChild(configChanges);
     return section;
 }
 
@@ -207,20 +223,43 @@ document.addEventListener('DOMContentLoaded', function() {
             e.stopPropagation();
             
             const codeBlock = this.nextElementSibling;
-            const codeText = codeBlock.textContent.trim();
+            const codeElement = codeBlock.querySelector('code');
+            const fullCode = codeElement.textContent;
             
-            navigator.clipboard.writeText(codeText).then(() => {
-                const originalText = this.innerHTML;
-                this.classList.add('copied');
-                this.innerHTML = '<i class="fa-solid fa-check fa-icon"></i> تم النسخ';
+            // Check if this code block has new code (has data-line attribute)
+            const pre = codeBlock.querySelector('pre');
+            if (pre && pre.hasAttribute('data-line')) {
+                const [startLine, endLine] = pre.getAttribute('data-line').split('-').map(Number);
+                const lines = fullCode.split('\n');
+                const newCode = lines.slice(startLine - 1, endLine).join('\n');
                 
-                setTimeout(() => {
-                    this.innerHTML = originalText;
-                    this.classList.remove('copied');
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-            });
+                navigator.clipboard.writeText(newCode).then(() => {
+                    const originalText = this.innerHTML;
+                    this.classList.add('copied');
+                    this.innerHTML = '<i class="fa-solid fa-check fa-icon"></i> تم النسخ';
+                    
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.classList.remove('copied');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            } else {
+                // If no new code, copy the whole code
+                navigator.clipboard.writeText(fullCode).then(() => {
+                    const originalText = this.innerHTML;
+                    this.classList.add('copied');
+                    this.innerHTML = '<i class="fa-solid fa-check fa-icon"></i> تم النسخ';
+                    
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.classList.remove('copied');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            }
         });
     });
 
