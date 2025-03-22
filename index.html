@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تحديثات سكربت FiveM</title>
+    <!-- Add Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Add Prism CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <style>
@@ -12,7 +14,7 @@
         :root {
             --primary-color: #0a0a0a;
             --secondary-color: #141414;
-            --accent-color: #5271ff;
+            --accent-color: #d4d4d4;
             --warning-color: #ffa07a;
             --success-color: #66bb6a;
             --text-color: #ffffff;
@@ -130,17 +132,18 @@
         .last-updated {
             position: absolute;
             top: 50%;
-            right: 50%;
-            transform: translate(50%, -50%);
+            left: 50%;
+            transform: translate(-50%, -50%);
             display: inline-block;
             margin-top: 0.75rem;
             font-size: 0.95rem;
             color: var(--accent-color);
             font-weight: 500;
             padding: 0.5rem 1rem;
-            background: rgba(82, 113, 255, 0.1);
+            background: rgba(179, 179, 179, 0.1);
             border-radius: 20px;
-            border: 1px solid rgba(82, 113, 255, 0.2);
+            border: 1px solid rgba(204, 204, 204, 0.2);
+            z-index: 2;
         }
         
         .container {
@@ -169,27 +172,30 @@
         }
         
         .version-header {
-            background: linear-gradient(45deg, var(--card-bg), var(--hover-color));
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
             align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            position: relative;
         }
         
         .version-header:hover {
-            background: var(--hover-color);
+            background: var(--bg-hover);
         }
         
         .version-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-color);
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
         }
 
         .version-title svg {
@@ -197,13 +203,29 @@
         }
         
         .version-date {
-            color: var(--light-text);
+            color: var(--text-secondary);
             font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .update-version:not(.active) .version-content {
+            display: none;
+        }
+
+        .update-version:not(.active) .toggle-icon {
+            transform: rotate(-90deg);
         }
         
         .version-content {
-            padding: 1.5rem;
-            background: linear-gradient(180deg, var(--card-bg), var(--secondary-color));
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: 0 0 8px 8px;
+            border: 1px solid var(--border-color);
+            border-top: none;
         }
         
         .update-section {
@@ -245,7 +267,7 @@
         }
         
         .code-block {
-            background-color: #1f2430;
+            background-color: #2d2d2d;
             border-radius: 8px;
             padding: 1rem;
             margin: 1rem 0;
@@ -280,12 +302,16 @@
         }
         
         .copy-button.copied {
-            background-color: var(--accent-color);
+            background-color: #006923;
+        }
+        
+        .copy-button.copied .fa-icon {
+            color: white;
         }
         
         .config-changes {
-            background-color: rgba(82, 113, 255, 0.1);
-            border: 1px solid rgba(82, 113, 255, 0.2);
+            background-color: rgba(7, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             padding: 1rem;
             margin: 1rem 0;
@@ -391,6 +417,71 @@
                 width: 140px;
                 height: 140px;
             }
+
+            .last-updated {
+                position: relative;
+                top: auto;
+                left: auto;
+                transform: none;
+                margin-top: 1rem;
+                display: block;
+                text-align: center;
+            }
+        }
+
+        .config-file {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .config-file:first-child {
+            margin-top: 1rem;
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .config-file h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-color);
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .config-file h4 svg {
+            opacity: 0.8;
+        }
+
+        .config-changes p {
+            color: var(--light-text);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Icon Styles */
+        .fa-icon {
+            color: var(--accent-color);
+            width: 16px;
+            height: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .copy-button .fa-icon {
+            width: 14px;
+            height: 14px;
+        }
+
+        .version-title .fa-icon {
+            margin-left: 0.5rem;
+        }
+
+        .section-title .fa-icon {
+            margin-left: 0.5rem;
         }
     </style>
 </head>
@@ -442,6 +533,7 @@
     <!-- Add Prism JS at the end of body for better performance -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-lua.min.js"></script>
     
     <!-- Add our JavaScript files -->
     <script src="updates-data.js"></script>
